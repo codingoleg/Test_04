@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  database:
+    container_name: "database"
+    image: mongo
+    restart: always
+    volumes:
+      - mongo_data:/data/db
+
+  app:
+    container_name: "app"
+    build: .
+    command: uvicorn fastapi_app.run:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    restart: always
+    depends_on:
+      - database
+    env_file:
+      - .env
+
+
+volumes:
+  mongo_data:
